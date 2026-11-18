@@ -1,0 +1,1050 @@
+:root{
+  --ink:#12100c;
+  --ink-soft:#1c1811;
+  --gold:#c9a66b;
+  --gold-bright:#e6cd97;
+  --gold-deep:#a3894f;
+  --ivory:#f6f2e8;
+  --ivory-soft:#ece4d2;
+  --card:#fdfbf5;
+  --wine:#6e1f2a;
+  --wine-bright:#8a2934;
+  --line: rgba(201,166,107,0.28);
+  --line-soft: rgba(18,16,12,0.10);
+  --ease: cubic-bezier(.22,.8,.32,1);
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow-1: 0 6px 24px rgba(18,16,12,0.07);
+  --shadow-2: 0 24px 60px rgba(18,16,12,0.16);
+  --shadow-dark: 0 24px 60px rgba(0,0,0,0.45);
+
+  /* Tipografia. Antes eram Playfair Display, que e a serifada mais
+     usada em site gerado de advocacia, e a fonte padrao do aparelho
+     para TODO o corpo de texto, que e a decisao tipografica de quem
+     nao tomou nenhuma. Fraunces tem eixo optico: titulo grande e
+     titulo pequeno parecem desenhados, nao escalados. */
+  --font-display:"Fraunces",Georgia,"Iowan Old Style",serif;
+  --font-text:"Inter",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+
+/* Identidade preta e dourada tirada do logo real do escritório. */
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ivory);
+  color:var(--ink);
+  font-family:var(--font-text);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+img,svg{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+.skip-link{
+  position:absolute;left:-999px;top:0;z-index:100;
+  background:var(--gold);color:var(--ink);padding:12px 18px;font-size:0.86rem;font-weight:600;border-radius:0 0 12px 0;
+}
+.skip-link:focus{left:0;top:0;}
+
+.serif{font-family:var(--font-display);text-wrap:balance;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;}
+.eyebrow.on-dark{color:var(--gold-bright);}
+.eyebrow.on-ivory{color:#7a6329;}
+
+.wrap{max-width:1140px;margin:0 auto;padding:0 32px;}
+.wrap.narrow{max-width:760px;}
+
+.section-title{font-size:2rem;font-weight:600;margin:0 0 40px;}
+.section-title.lg{font-size:2.5rem;max-width:660px;}
+
+/* ---------- header ---------- */
+header.site{
+  background:rgba(18,16,12,0.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(201,166,107,0.18);
+  position:sticky;top:0;z-index:50;
+  transition:box-shadow .25s ease;
+}
+header.site.is-scrolled{box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:12px 32px;min-height:72px;}
+.header-row img{height:48px;width:auto;object-fit:contain;}
+.header-actions{display:flex;align-items:center;gap:14px;}
+nav.main{display:flex;gap:20px;flex-wrap:nowrap;}
+nav.main a{font-size:0.84rem;color:#d8cdb8;padding:6px 0;border-bottom:2px solid transparent;transition:border-color .15s ease, color .15s ease;}
+nav.main a.active{color:var(--gold-bright);border-color:var(--gold);}
+nav.main a:hover,nav.main a:focus-visible{color:var(--gold-bright);}
+
+.nav-toggle{
+  display:none;
+  width:42px;height:42px;
+  border:1px solid var(--line);border-radius:12px;
+  background:transparent;padding:0;
+  align-items:center;justify-content:center;cursor:pointer;color:var(--ivory);
+}
+.nav-toggle svg{width:20px;height:20px;}
+.nav-toggle .icon-close{display:none;}
+.nav-toggle[aria-expanded="true"] .icon-open{display:none;}
+.nav-toggle[aria-expanded="true"] .icon-close{display:block;}
+
+@media (max-width:1100px){
+  .header-row{position:relative;justify-content:flex-end;padding:10px 22px;min-height:64px;}
+  .header-row>a:first-child{
+    position:absolute;left:50%;top:50%;z-index:1;
+    transform:translate(-50%,-50%);line-height:0;
+  }
+  .header-row img{height:44px;max-width:calc(100vw - 140px);}
+  .header-actions{position:relative;z-index:45;margin-left:auto;}
+  .header-actions>.btn{display:none;}
+  nav.main{
+    position:fixed;inset:0 0 0 auto;top:0;
+    width:min(330px,86vw);height:100vh;height:100dvh;
+    background:var(--ink);
+    border-left:1px solid var(--line);
+    flex-direction:column;gap:2px;
+    padding:82px 30px max(30px,env(safe-area-inset-bottom));
+    transform:translateX(100%);
+    transition:transform .32s var(--ease);
+    z-index:40;
+    visibility:hidden;pointer-events:none;
+    overflow-y:auto;overscroll-behavior:contain;
+  }
+  nav.main.is-open{transform:translateX(0);visibility:visible;pointer-events:auto;}
+  nav.main a{font-size:1.02rem;padding:14px 0;}
+  .nav-toggle{display:flex;}
+  .nav-scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:35;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .24s ease,visibility .24s ease;}
+  .nav-scrim.is-open{opacity:1;visibility:visible;pointer-events:auto;}
+}
+
+/* ---------- buttons (pill) ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:14px 28px;font-size:0.84rem;letter-spacing:0.04em;
+  border-radius:999px;font-weight:700;white-space:normal;text-align:center;max-width:100%;cursor:pointer;
+  border:1px solid transparent;
+  transition:background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,0.25);}
+.btn:active{transform:translateY(0);}
+.btn-gold{background:var(--gold);color:var(--ink);}
+.btn-gold:hover,.btn-gold:focus-visible{background:var(--gold-bright);}
+.btn-line{background:rgba(255,255,255,0.04);border-color:rgba(201,166,107,0.5);color:var(--ivory);}
+.btn-line:hover,.btn-line:focus-visible{border-color:var(--gold);color:var(--gold-bright);}
+.btn-wine{background:var(--wine);color:#fff;}
+.btn-wine:hover,.btn-wine:focus-visible{background:var(--wine-bright);}
+
+/* ---------- WhatsApp float ---------- */
+.wa-float{
+  position:fixed;right:22px;bottom:22px;z-index:60;
+  width:58px;height:58px;border-radius:50%;
+  background:#25D366;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease, visibility .2s ease;
+}
+.wa-float:hover{transform:scale(1.08);box-shadow:0 16px 38px rgba(0,0,0,0.4);}
+.wa-float svg{width:30px;height:30px;}
+.nav-open .wa-float{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px);}
+
+/* ---------- hero: home (foto em tela cheia + card de vidro) ---------- */
+.hero-home{
+  position:relative;
+  min-height:88vh;
+  display:flex;align-items:center;
+  background:var(--ink);
+  padding:120px 0 150px;
+  overflow:hidden;
+}
+.hero-grid{
+  display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center;
+}
+.hero-home .eyebrow{display:block;margin-bottom:22px;}
+.hero-home h1{font-size:clamp(2.7rem,5.2vw,4.3rem);line-height:1.06;margin:0 0 22px;color:#fff;font-weight:600;}
+.hero-home h1 em{font-style:normal;color:var(--gold-bright);}
+.hero-home p.sub{max-width:520px;margin:0 0 40px;color:#e9e2d2;font-size:1.06rem;}
+.hero-home .actions{display:flex;gap:16px;flex-wrap:wrap;}
+
+.glass-card{
+  background:rgba(24,21,16,0.55);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(201,166,107,0.35);
+  border-radius:var(--radius);
+  padding:36px 34px;
+  box-shadow:var(--shadow-dark);
+}
+.glass-card .quote{
+  font-family:var(--font-display);
+  font-size:1.7rem;line-height:1.22;color:#fff;font-weight:600;margin:0 0 16px;
+  text-wrap:balance;
+}
+.glass-card .quote em{font-style:normal;color:var(--gold-bright);}
+.glass-card p.ctx{color:#d8cdb8;font-size:0.9rem;margin:0 0 22px;}
+.glass-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.glass-card li{display:flex;align-items:center;gap:10px;font-size:0.88rem;color:#e9e2d2;}
+.glass-card li svg{width:15px;height:15px;color:var(--gold);flex-shrink:0;}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:40px;}
+  .hero-home{min-height:auto;padding:80px 0;}
+}
+
+@media (max-width:700px){
+  .wrap{padding-left:22px;padding-right:22px;}
+  .header-row{padding-left:20px;padding-right:20px;}
+  .hero-home{padding:56px 0 92px;background-position:center 40%;}
+  .hero-grid{gap:28px;}
+  .hero-home h1{font-size:clamp(2.15rem,10.5vw,3rem);line-height:1.08;margin-bottom:18px;}
+  .hero-home p.sub{font-size:1rem;margin-bottom:28px;}
+  .hero-home .actions{gap:10px;}
+  .glass-card{padding:28px 24px;}
+  .glass-card .quote{font-size:1.5rem;}
+  .wa-float{right:16px;bottom:max(16px,env(safe-area-inset-bottom));width:54px;height:54px;}
+  .contact-page{background-attachment:scroll;}
+}
+
+.pillar,.step{position:relative;overflow:hidden;}
+
+/* ---------- seções em camadas: cada banda sobrepõe a anterior ---------- */
+.band-ivory,.band-dark,.band-steps,section.topics,.split,section.story,.areas,footer.site{
+  position:relative;
+  border-radius:clamp(28px,5vw,44px) clamp(28px,5vw,44px) 0 0;
+  margin-top:-44px;
+}
+.band-ivory{z-index:2;}
+.band-dark{z-index:3;}
+.band-steps{z-index:4;}
+section.topics,.split,section.story,.areas{z-index:2;}
+footer.site{z-index:5;}
+
+/* ---------- diferenciais (home) ---------- */
+.band-ivory{
+  background:linear-gradient(180deg, #faf5ea 0%, #f1eada 100%);
+  padding:96px 0 124px;
+  overflow:hidden;
+}
+.band-ivory .wrap,.band-steps .wrap{position:relative;}
+
+/* ---------- estados "aceso" — os cards acendem sozinhos em sequência ---------- */
+.pillar,.step{
+  transition:transform .55s var(--ease), border-color .55s ease, box-shadow .55s ease;
+}
+.pillar .mark{transition:background-color .55s ease, color .55s ease, transform .55s ease;}
+.step .num{transition:color .55s ease;}
+
+.pillar.is-lit{
+  transform:translateY(-7px);
+  box-shadow:0 0 0 1px rgba(201,166,107,0.55), 0 26px 60px rgba(18,16,12,0.18);
+}
+.pillar.is-lit .mark{background:var(--wine);color:#fdfbf5;transform:scale(1.08);}
+
+.step.is-lit{
+  transform:translateY(-7px);
+  box-shadow:0 0 0 1px rgba(201,166,107,0.5), 0 24px 55px rgba(18,16,12,0.16);
+}
+.step.is-lit .num{color:rgba(201,166,107,0.5);}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.pillar{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:36px 32px;
+  box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.pillar:hover{transform:translateY(-5px);box-shadow:var(--shadow-2);}
+.pillar .mark{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(110,31,42,0.08);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:22px;color:var(--wine);
+}
+.pillar .mark svg{width:26px;height:26px;}
+.pillar h3{font-family:var(--font-display);font-size:1.45rem;line-height:1.15;margin:0 0 10px;font-weight:600;}
+.pillar p{margin:0;font-size:0.94rem;color:#4a4234;}
+
+@media (max-width:860px){
+  .pillars{grid-template-columns:1fr;}
+}
+
+/* ---------- áreas de atuação com foto (home) ---------- */
+.band-dark{
+  background:linear-gradient(180deg, var(--ink) 0%, #191510 100%);
+  padding:96px 0 140px;
+  overflow:hidden;
+}
+.band-dark .wrap{position:relative;}
+.band-dark .head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:52px;flex-wrap:wrap;}
+.area-secondary{
+  background:rgba(201,166,107,0.05);
+  border:1px dashed rgba(201,166,107,0.4);
+  border-radius:var(--radius);
+  padding:24px 30px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.area-secondary h3{font-size:1rem;margin:0 0 4px;color:#e9e2d2;font-weight:600;}
+.area-secondary p{margin:0;font-size:0.88rem;color:#b7a988;}
+.area-secondary a{font-size:0.82rem;color:var(--gold);white-space:nowrap;font-weight:600;}
+.area-secondary a:hover{color:var(--gold-bright);}
+
+@media (max-width:900px){
+}
+
+/* ---------- processo: como conduzimos (home) ---------- */
+.band-steps{background:var(--ivory);padding:96px 0 72px;}
+.band-steps .head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:52px;flex-wrap:wrap;}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.step{
+  position:relative;overflow:hidden;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:32px 28px 28px;
+  box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.step:hover{transform:translateY(-5px);box-shadow:var(--shadow-2);}
+.step .num{
+  position:absolute;top:-18px;right:2px;
+  font-family:var(--font-display);
+  font-size:6.4rem;line-height:1;font-weight:600;
+  color:rgba(201,166,107,0.16);
+  pointer-events:none;
+}
+.step h3{font-family:var(--font-display);font-size:1.4rem;line-height:1.12;margin:0 0 10px;font-weight:600;position:relative;}
+.step p{margin:0;font-size:0.9rem;color:#4a4234;position:relative;}
+
+@media (max-width:900px){
+  .steps{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:560px){
+  .steps{grid-template-columns:1fr;}
+}
+
+/* ---------- banner de conversão com foto (home) ---------- */
+.band-cta{padding:0 0 96px;background:var(--ivory);}
+.cta-banner{
+  position:relative;overflow:hidden;
+  border-radius:24px;
+  background:linear-gradient(95deg, #5a1620 0%, #6e1f2a 58%, #7d2733 100%);
+  padding:72px 64px;
+  box-shadow:var(--shadow-2);
+}
+.cta-banner h2{font-size:clamp(1.8rem,3.4vw,2.6rem);margin:0 0 12px;color:#fff;font-weight:600;max-width:560px;}
+.cta-banner p{margin:0 0 30px;color:#f3ddd9;font-size:0.98rem;max-width:480px;}
+
+@media (max-width:700px){
+  .cta-banner{padding:48px 30px;}
+}
+
+/* ---------- hero: páginas internas ---------- */
+.hero-split{background:var(--ink);padding:0;}
+.hero-split-inner{
+  background:
+    linear-gradient(100deg, rgba(18,16,12,0.95) 0%, rgba(18,16,12,0.82) 55%, rgba(18,16,12,0.55) 100%),
+    var(--ink);
+  background-size:cover;
+  background-position:center 35%;
+  background-repeat:no-repeat;
+  padding:96px 0 88px;
+}
+.hero-split h1{font-size:clamp(2.3rem,4.2vw,3.4rem);line-height:1.1;color:#fff;margin:16px 0 18px;max-width:800px;font-weight:600;}
+.hero-split p.sub{max-width:620px;color:#e9e2d2;font-size:1.04rem;margin:0 0 32px;}
+.hero-split .actions{display:flex;gap:14px;flex-wrap:wrap;}
+.urgency-strip{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(110,31,42,0.5);border:1px solid var(--wine-bright);
+  border-radius:999px;color:#f7e3e0;
+  font-size:0.8rem;padding:9px 18px;margin-bottom:22px;
+}
+.urgency-strip svg{width:14px;height:14px;flex-shrink:0;}
+
+/* ---------- hero: institucional ---------- */
+.hero-solid{background:var(--ink);padding:88px 0 80px;}
+.hero-solid .wrap{max-width:800px;}
+.hero-solid h1{font-size:clamp(2.3rem,4.2vw,3.3rem);line-height:1.1;color:#fff;margin:16px 0 18px;font-weight:600;}
+.hero-solid p.sub{color:#e9e2d2;font-size:1.04rem;margin:0;}
+.hero-solid.with-photo{
+  background:
+    linear-gradient(180deg, rgba(18,16,12,0.78) 0%, rgba(18,16,12,0.9) 100%),
+    url('../assets/escritorio-hero.webp') center 35%/cover no-repeat;
+  padding:110px 0 96px;
+}
+
+/* ---------- listas de temas (páginas de área) ---------- */
+section.topics{background:var(--ivory);padding:88px 0 48px;}
+.topic-list{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.topic{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:30px 30px 28px;
+  box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.topic:hover{transform:translateY(-4px);box-shadow:var(--shadow-2);}
+.topic h3{font-family:var(--font-display);margin:0 0 10px;font-size:1.45rem;line-height:1.12;color:var(--wine);font-weight:600;}
+.topic p{margin:0;font-size:0.94rem;color:#4a4234;}
+
+@media (max-width:820px){
+  .topic-list{grid-template-columns:1fr;}
+}
+
+/* ---------- bloco de conversão (páginas internas) ---------- */
+.convert-block{
+  position:relative;overflow:hidden;
+  background:linear-gradient(140deg, var(--ink-soft), var(--ink));
+  border:1px solid rgba(201,166,107,0.3);
+  border-radius:24px;
+  color:var(--ivory);
+  padding:52px 46px;margin:64px 0;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;
+  box-shadow:var(--shadow-2);
+}
+.convert-block.wine{
+  background:linear-gradient(95deg, #5a1620 0%, #6e1f2a 60%, #7d2733 100%);
+  border:none;
+}
+.convert-block.centered{justify-content:center;text-align:center;flex-direction:column;}
+.convert-block h3{margin:0 0 8px;font-size:1.6rem;font-weight:600;}
+.convert-block p{margin:0 0 20px;color:#d8cdb8;font-size:0.94rem;max-width:46ch;}
+.convert-block.wine p{color:#f3ddd9;}
+
+/* ---------- FAQ (cards arredondados) ---------- */
+section.faq{padding:24px 0 96px;}
+/* --gold-deep (#a3894f) sobre o marfim da secao da 3,01, abaixo do minimo
+   de 4,5. Aqui usa o tom escuro que o projeto ja tem em .eyebrow.on-ivory,
+   que mede 5,15. Escopo na secao de proposito: o mesmo --gold-deep passa
+   em demais-areas.html (5,65), onde o fundo e outro. */
+section.faq .eyebrow{display:block;margin-bottom:10px;color:#7a6329;}
+section.faq .note{font-size:0.84rem;color:#6b6148;margin:0 0 32px;}
+.faq-item{
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-1);
+  margin-bottom:14px;
+  overflow:hidden;
+  transition:box-shadow .2s ease;
+}
+.faq-item:hover{box-shadow:var(--shadow-2);}
+.faq-q{
+  width:100%;text-align:left;background:none;border:0;cursor:pointer;
+  padding:20px 24px;font-size:1rem;font-weight:600;font-family:inherit;color:var(--ink);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.faq-icon{position:relative;width:16px;height:16px;flex-shrink:0;}
+.faq-icon::before,.faq-icon::after{
+  content:"";position:absolute;background:var(--wine);
+  top:50%;left:50%;transform:translate(-50%,-50%);border-radius:2px;
+}
+.faq-icon::before{width:14px;height:2px;}
+.faq-icon::after{width:2px;height:14px;transition:transform .25s var(--ease);}
+.faq-q[aria-expanded="true"] .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg) scaleY(0);}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease);}
+.faq-a-inner{overflow:hidden;}
+.faq-a-inner p{margin:0;padding:0 24px 22px;font-size:0.94rem;color:#4a4234;max-width:70ch;}
+.faq-item.is-open .faq-a{grid-template-rows:1fr;}
+
+/* ---------- trabalhista: split ---------- */
+.split{background:var(--ivory);padding:88px 0;}
+.split-head{margin-bottom:44px;max-width:640px;}
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.split-col{
+  position:relative;overflow:hidden;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:38px 36px;
+  box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.split-col:hover{transform:translateY(-5px);box-shadow:var(--shadow-2);}
+.split-col.dark{background:linear-gradient(160deg, var(--ink-soft), var(--ink));color:var(--ivory);border:1px solid rgba(201,166,107,0.25);}
+.split-col .icon-watermark{
+  position:absolute;right:-18px;bottom:-18px;width:150px;height:150px;
+  color:var(--wine);opacity:0.07;pointer-events:none;
+}
+.split-col.dark .icon-watermark{color:var(--gold);opacity:0.1;}
+.split-col .content{position:relative;}
+.split-col .tag{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--wine);font-weight:700;margin-bottom:16px;display:block;}
+.split-col.dark .tag{color:var(--gold);}
+.split-col h3{font-family:var(--font-display);font-size:1.55rem;line-height:1.12;margin:0 0 20px;font-weight:600;}
+.split-col ul{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:14px;}
+.split-col li{font-size:0.93rem;padding-left:20px;position:relative;}
+.split-col li::before{content:"";position:absolute;left:0;top:0.5em;width:8px;height:8px;border-radius:50%;background:var(--wine);}
+.split-col.dark li::before{background:var(--gold);}
+
+@media (max-width:860px){
+  .split-grid{grid-template-columns:1fr;}
+}
+
+/* ---------- o escritório ---------- */
+section.story{background:var(--ivory);padding:88px 0 64px;}
+section.story .wrap.narrow p{font-size:1.04rem;color:#4a4234;margin:0 0 20px;}
+.principles{padding:0 0 88px;}
+.principle-list{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.principle{
+  background:var(--card);border-radius:var(--radius);
+  padding:30px 28px;box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.principle:hover{transform:translateY(-4px);box-shadow:var(--shadow-2);}
+.principle h3{font-family:var(--font-display);margin:0 0 10px;font-size:1.4rem;color:var(--wine);font-weight:600;}
+.principle p{margin:0;font-size:0.93rem;color:#4a4234;}
+
+@media (max-width:860px){
+  .principle-list{grid-template-columns:1fr;}
+}
+
+/* ---------- demais áreas ---------- */
+.areas{background:var(--ivory);padding:88px 0 96px;}
+.area-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.area{
+  background:var(--card);border-radius:var(--radius);
+  padding:34px 32px;box-shadow:var(--shadow-1);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.area:hover{transform:translateY(-4px);box-shadow:var(--shadow-2);}
+.area h2{font-family:var(--font-display);font-size:1.55rem;line-height:1.12;margin:0 0 12px;font-weight:600;}
+.area p{margin:0;font-size:0.94rem;color:#4a4234;}
+
+@media (max-width:820px){
+  .area-grid{grid-template-columns:1fr;}
+}
+
+/* ---------- contato ---------- */
+.hero-contact{padding:88px 0 0;background:var(--ink);}
+.hero-contact .eyebrow{display:block;margin-bottom:16px;}
+.hero-contact h1{font-size:clamp(2.3rem,4.2vw,3.2rem);margin:0 0 14px;max-width:680px;font-weight:600;color:#fff;line-height:1.1;}
+.hero-contact p.sub{max-width:560px;color:#e9e2d2;font-size:1.04rem;margin:0;}
+.contact-page{
+  background:linear-gradient(180deg,#12100c 0%,#1a1611 100%);
+  color:var(--ivory);
+}
+.contact-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:44px;padding:64px 0 54px;align-items:start;}
+form{
+  display:flex;flex-direction:column;gap:18px;
+  background:rgba(28,24,17,0.7);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(201,166,107,0.25);
+  border-radius:var(--radius);
+  padding:36px 34px;
+  box-shadow:var(--shadow-dark);
+}
+label{font-size:0.78rem;letter-spacing:0.04em;color:#d8cdb8;display:block;margin-bottom:6px;}
+input,select,textarea{
+  width:100%;background:rgba(18,16,12,0.6);
+  border:1px solid rgba(201,166,107,0.3);border-radius:12px;
+  color:var(--ivory);padding:14px 16px;font-size:0.94rem;font-family:inherit;
+  transition:border-color .15s ease;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+textarea{resize:vertical;min-height:110px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.consent{font-size:0.78rem;color:#b7a988;margin-top:-4px;}
+.form-submit{width:100%;justify-content:center;padding:15px 22px;font-size:0.88rem;}
+.form-status{
+  font-size:0.86rem;color:var(--gold-bright);display:none;
+  border:1px solid rgba(201,166,107,0.4);border-radius:12px;
+  padding:13px 16px;background:rgba(201,166,107,0.1);
+}
+.form-status.is-visible{display:block;}
+.info-panel{
+  background:rgba(28,24,17,0.7);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(201,166,107,0.25);
+  border-radius:var(--radius);
+  padding:36px 32px;display:flex;flex-direction:column;gap:22px;
+  box-shadow:var(--shadow-dark);
+}
+.info-item .label{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:6px;font-weight:700;}
+.info-item .value{font-size:0.98rem;color:var(--ivory);}
+.info-item .value.placeholder{color:#b7a988;font-style:italic;}
+.legal-notice{font-size:0.78rem;color:#b7a988;border-top:1px solid rgba(201,166,107,0.25);padding-top:18px;line-height:1.5;}
+.location-section{padding-top:0;padding-bottom:110px;}
+.location-heading{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:28px;
+  margin-bottom:24px;
+}
+.location-copy h2{font-size:clamp(1.9rem,3vw,2.6rem);line-height:1.1;margin:0 0 8px;color:var(--ivory);font-weight:600;}
+.location-copy p{margin:0;color:#d8cdb8;max-width:58ch;}
+.location-heading .btn{flex:0 0 auto;white-space:nowrap;}
+.map-frame{
+  position:relative;overflow:hidden;
+  min-height:360px;height:clamp(360px,42vw,480px);
+  border:1px solid rgba(201,166,107,0.3);
+  border-radius:var(--radius);
+  background:rgba(28,24,17,0.7);
+  box-shadow:var(--shadow-dark);
+}
+.map-frame iframe{display:block;width:100%;height:100%;border:0;}
+
+@media (max-width:880px){
+  .contact-grid{grid-template-columns:1fr;}
+  .field-row{grid-template-columns:1fr;}
+  .location-section{padding-bottom:76px;}
+  .location-heading{align-items:flex-start;flex-direction:column;gap:18px;}
+  .location-heading .btn{width:100%;justify-content:center;}
+  .map-frame{height:340px;min-height:340px;}
+}
+
+/* ---------- footer ---------- */
+footer.site{background:var(--ink);border-top:1px solid rgba(201,166,107,0.2);padding:56px 0 34px;}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap;margin-bottom:34px;}
+.foot-top img{height:32px;width:auto;object-fit:contain;opacity:0.92;}
+.foot-links{display:flex;gap:24px;flex-wrap:wrap;font-size:0.84rem;color:#d8cdb8;}
+.foot-links a{transition:color .15s ease;}
+.foot-links a:hover{color:var(--gold-bright);}
+.foot-fine{font-size:0.76rem;color:#a89a7e;border-top:1px solid rgba(201,166,107,0.18);padding-top:22px;max-width:80ch;}
+
+/* ---------- motion: reveal on scroll (animation, para não brigar com hovers) ---------- */
+/* so esconde depois que o JS provar que esta vivo (classe .js no <html>).
+   Antes: se motion.js falhasse, 27 blocos da home ficavam invisiveis para sempre. */
+html.js [data-reveal].is-visible{
+  animation:reveal-in .65s var(--ease) both;
+  animation-delay:var(--reveal-delay,0ms);
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  html.js [data-reveal],html.js [data-reveal].is-visible{opacity:1;transform:none;filter:none;animation:none;}
+  .pillar,.area,.split-col,.topic,.principle,.step,.btn,.wa-float,nav.main,.faq-a,.faq-icon::after,header.site,.area-index a{transition:none;animation:none;}
+}
+
+/* ============================================================
+   CAMADA DE AUTORIDADE — assinatura da marca nos cards e fundos
+   (o quadrado-moldura do logo vira o motivo visual do site)
+   ============================================================ */
+
+/* fundos claros: degradê mais profundo + monograma presente */
+.band-ivory{background:linear-gradient(180deg, #faf5ea 0%, #eee5d0 100%);}
+.band-steps,.split,section.topics,.areas,section.story{
+  background:linear-gradient(180deg, #f7f2e6 0%, #efe7d4 100%);
+  overflow:hidden;
+}
+.band-ivory::after,.split::after,section.topics::after{
+  content:"";position:absolute;right:-130px;top:60px;width:500px;height:500px;
+  background:url('../assets/logo-mark.png') center/contain no-repeat;
+  opacity:0.05;pointer-events:none;
+}
+.band-steps::after,.areas::after{
+  content:"";position:absolute;left:-130px;bottom:40px;width:460px;height:460px;
+  background:url('../assets/logo-mark.png') center/contain no-repeat;
+  opacity:0.05;pointer-events:none;
+}
+
+/* cards claros: presença — borda quente, degradê, moldura do logo no canto */
+.pillar,.step,.topic,.area,.principle{
+  background:linear-gradient(165deg, #fffdf7 0%, #f6efdf 100%);
+  border:1px solid rgba(201,166,107,0.35);
+}
+.pillar,.step,.topic,.area,.principle{position:relative;}
+
+/* numeral fantasma dos passos: canto inferior, sem brigar com o título */
+.step .num{
+  top:auto;right:10px;bottom:-26px;
+  font-size:6rem;color:rgba(201,166,107,0.22);
+}
+.step.is-lit .num{color:rgba(201,166,107,0.55);}
+
+/* títulos com mais comando */
+.section-title{font-size:2.1rem;letter-spacing:-0.01em;}
+.section-title.lg{font-size:2.6rem;}
+.pillar h3,.step h3,.topic h3,.area h2,.principle h3{letter-spacing:-0.01em;}
+
+@media (prefers-reduced-motion:reduce){
+  .band-ivory::after,.band-steps::after,.split::after,section.topics::after,.areas::after{opacity:0.05;}
+}
+
+/* ============================================================
+   CORREÇÕES — 02/09
+   ============================================================ */
+
+/* 1 · O menu lateral fechado ficava em translateX(100%) e esticava a
+      largura rolável de 390px para 720px em TODAS as páginas. Consequência:
+      o site rolava de lado no celular e o botão flutuante do WhatsApp,
+      ancorado em right:22px, caía 250px fora da tela. `clip` recorta sem
+      criar contexto de rolagem (ao contrário de `hidden`). */
+html{overflow-x:clip}
+body{overflow-x:clip}
+
+/* 2 · Título escuro sobre gradiente escuro da mesma cor — texto invisível.
+      As seções .partners (Sócios) e .proof (depoimentos) que também sofriam
+      disso foram removidas a pedido do cliente; sobrou a faixa escura da home. */
+.band-dark .section-title{color:#fff}
+
+/* 3 · O botão de abrir/fechar o menu ficava ATRÁS do painel (z-index 40),
+      então com o menu aberto não havia como fechá-lo pelo X. */
+.nav-toggle{position:relative;z-index:45}
+
+
+/* Botoes: o texto quebra em vez de ser cortado. Medido: "Quero Falar sobre
+   Consultoria Empresarial" vazava 64px fora da tela em 360px de largura. */
+.btn{white-space:normal;text-align:center;max-width:100%;text-wrap:balance}
+@media (max-width:700px){
+  .convert-block .btn,.hero-split .actions .btn,.hero-home .actions .btn,.actions .btn{
+    width:100%;justify-content:center;
+  }
+}
+
+
+/* ============================================================
+   CORREÇÕES — 02/09 · rodada 2
+   ============================================================ */
+
+/* Alvos de toque abaixo do mínimo utilizável. Medido no iPhone 13:
+   telefone e e-mail do painel de contato tinham 18px de altura clicável e
+   os links do rodapé, 22px. O piso é 44px (Apple HIG / WCAG 2.5.5). */
+.info-item .value a,
+.foot-links a{
+  display:inline-flex;align-items:center;
+  min-height:44px;padding:11px 0;
+}
+/* o botão de abrir o menu tinha 42x42 e, dentro do flex do cabeçalho,
+   ainda era espremido para 29px de largura. */
+.nav-toggle{width:44px;height:44px;flex:0 0 auto;}
+
+
+/* ============================================================
+   RODADA DE DESENHO — 14/10
+   Diagnostico: o site inteiro tinha seis efeitos de atmosfera
+   empilhados (grao, aurora em quatro secoes, varredura de brilho,
+   tilt, marca d'agua, colchete) e nenhuma decisao de tipografia nos
+   titulos de secao. As camadas acima foram cortadas; aqui ficam as
+   decisoes que substituem elas.
+   ============================================================ */
+
+/* --- 1. entrelinha dos titulos de secao ---------------------
+   Era o sinal mais forte de CSS gerado: o h1 e os h3 de card
+   tinham line-height desenhado (1.06 e 1.15) e TODO h2 de secao
+   herdava o 1.6 do body. Medido no celular: um titulo de tres
+   linhas ocupava 199px de altura, 25px de buraco entre linhas. */
+.section-title{
+  font-size:clamp(1.75rem,1.1rem + 2.6vw,2.1rem);
+  line-height:1.1;
+  letter-spacing:-0.015em;
+  margin:0 0 32px;
+  text-wrap:balance;
+}
+.section-title.lg{
+  font-size:clamp(2rem,1.2rem + 3.4vw,2.6rem);
+  line-height:1.05;
+  max-width:18ch;
+}
+.cta-banner h2{line-height:1.06;letter-spacing:-0.015em;}
+.hero-split h1,.hero-solid h1{line-height:1.06;letter-spacing:-0.015em;}
+
+/* --- 2. eyebrow sem o clichê de template -------------------
+   Maiuscula + peso 700 + tracking 0.16em e a assinatura de tema
+   pronto. Peso 500 e tracking menor, e a ordem passa a ser fixa:
+   eyebrow ANTES do titulo, inclusive no celular (em duas das tres
+   secoes da home ela caia abaixo do h2 e lia como legenda). */
+.eyebrow{font-weight:500;letter-spacing:0.11em;font-size:0.74rem;}
+.band-dark .head,.band-steps .head{display:block;margin-bottom:44px;}
+.band-dark .head .eyebrow,.band-steps .head .eyebrow{display:block;margin-bottom:14px;}
+.band-ivory .eyebrow{display:block;margin-bottom:14px;}
+
+/* --- 3. escala de elevacao em tres niveis -------------------
+   Oito componentes tinham a mesma fisionomia (raio 18 a 24px,
+   sombra igual, translateY(-5px) no hover). Quando tudo tem o
+   mesmo peso, nada parece importante. */
+.cta-banner,.convert-block{border-radius:4px;}
+.area,.topic,.faq-item,.area-secondary{
+  border-radius:10px;box-shadow:none;border:1px solid rgba(201,166,107,0.22);
+}
+.area:hover,.topic:hover,.split-col:hover{transform:none;box-shadow:none;}
+.pillar,.step,.principle{
+  border-radius:0;box-shadow:none;border:0;background:none;
+}
+.pillar:hover,.step:hover,.principle:hover{transform:none;box-shadow:none;}
+
+/* --- 4. pilares: tipografia com regua, sem icone ------------
+   Icone em quadradinho arredondado + h3 + paragrafo, tres vezes
+   em grade 1fr 1fr 1fr, e o componente mais gerado por IA que
+   existe. E os icones eram balao de conversa, alvo e raio: raio
+   com "Tecnologia e Agilidade" e cartao de visita de template de
+   SaaS, nao de banca de advocacia. */
+.pillars{grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid rgba(18,16,12,0.14);}
+.pillar{padding:36px 28px 36px 0;}
+.pillar + .pillar{border-left:1px solid rgba(18,16,12,0.14);padding-left:28px;}
+.pillar .mark{display:none;}
+.pillar h3{font-size:1.3rem;line-height:1.14;margin:0 0 12px;}
+.pillar p{font-size:0.95rem;line-height:1.55;color:#4a4234;max-width:30ch;}
+@media (max-width:860px){
+  .pillars{grid-template-columns:1fr;}
+  .pillar{padding:26px 0;border-bottom:1px solid rgba(18,16,12,0.14);}
+  .pillar + .pillar{border-left:0;padding-left:0;}
+  .pillar p{max-width:none;}
+}
+
+/* --- 5. areas: indice editorial, nao grade de cards ---------
+   A grade carregava quatro fotos de banco de imagem (estatua da
+   justica, maos de casal idoso, cartao de credito, aperto de
+   maos), tinha card orfao no desktop (3+1, dois tercos da linha
+   vazios) e cortava a foto do previdenciario, que e retrato
+   1200x1507, numa faixa de 170px: sobrava 11% da imagem.
+   Aqui a linha inteira e a superficie clicavel. */
+.area-index{list-style:none;margin:0 0 28px;padding:0;border-top:1px solid rgba(201,166,107,0.22);}
+.area-index li{border-bottom:1px solid rgba(201,166,107,0.22);}
+.area-index a{
+  display:grid;grid-template-columns:76px minmax(0,1fr) minmax(0,1.3fr);
+  align-items:baseline;gap:28px;
+  padding:30px 24px 30px 0;
+  transition:background-color .28s var(--ease),padding-left .28s var(--ease);
+}
+.area-index .idx{
+  font-family:var(--font-display);
+  font-size:1rem;color:var(--gold-deep);letter-spacing:0.08em;
+}
+.area-index .nome{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3vw,2.15rem);line-height:1.04;
+  color:#fff;letter-spacing:-0.015em;
+}
+.area-index .desc{font-size:0.92rem;line-height:1.55;color:#b7a988;max-width:46ch;}
+.area-index a:hover,.area-index a:focus-visible{background:rgba(201,166,107,0.07);padding-left:20px;}
+.area-index a:hover .idx,.area-index a:focus-visible .idx{color:var(--gold-bright);}
+@media (max-width:820px){
+  .area-index a{grid-template-columns:44px 1fr;gap:6px 14px;padding:22px 0;}
+  .area-index .desc{grid-column:2;font-size:0.88rem;max-width:none;}
+  .area-index a:hover,.area-index a:focus-visible{padding-left:0;}
+}
+
+/* --- 6. costura entre as faixas -----------------------------
+   .band-steps terminava em #efe7d4 e .band-cta comecava em
+   #f6f2e8 na mesma coordenada, sem raio e sem margem negativa:
+   uma linha horizontal visivel atravessando a pagina. */
+.band-cta{background:linear-gradient(180deg,#efe7d4 0%,#f6f2e8 40%);}
+
+/* --- 7. largura e ritmo por secao --------------------------
+   Todo bloco vivia no mesmo .wrap de 1140px: medido, o mesmo
+   left:143px doze vezes seguidas, do cabecalho ao rodape. E todo
+   topo de secao media 96px. */
+.band-ivory .wrap{max-width:980px;}
+.band-dark .wrap{max-width:1240px;}
+.band-steps .wrap{max-width:900px;}
+.band-ivory{padding:112px 0 96px;}
+.band-dark{padding:132px 0 120px;}
+.band-steps{padding:96px 0 64px;}
+@media (max-width:700px){
+  .band-ivory{padding:64px 0 56px;}
+  .band-dark{padding:72px 0 64px;}
+  .band-steps{padding:56px 0 40px;}
+}
+
+/* --- 8. passos: o algarismo e a coluna ---------------------
+   O numeral era enfeite de 96px em dourado 22% colado no canto
+   inferior, sob o texto e sem funcao. Virando coluna, o olho
+   desce pela fileira de algarismos sem precisar de animacao. */
+.step{
+  display:grid;grid-template-columns:auto 1fr;gap:4px 20px;
+  padding:28px 0;overflow:visible;
+}
+.step .num{
+  position:static;grid-row:1 / 3;
+  font-size:2.6rem;line-height:0.92;
+  color:var(--gold-deep);opacity:0.85;
+}
+.step.is-lit .num{color:var(--gold-deep);}
+.step h3{grid-column:2;margin:0 0 8px;}
+.step p{grid-column:2;}
+@media (min-width:901px){
+  .steps{align-items:start;}
+  .step:nth-child(2){margin-top:26px;}
+  .step:nth-child(3){margin-top:52px;}
+  .step:nth-child(4){margin-top:78px;}
+}
+
+/* --- 9. janela de leitura ----------------------------------
+   Nao havia max-width de leitura em lugar nenhum. Medido a
+   1024px, o texto de o-escritorio.html renderizava 92 caracteres
+   por linha; a janela confortavel e 60 a 75. */
+.pillar p,.step p,.topic p,.area p,.principle p{max-width:42ch;}
+section.story .wrap.narrow p{max-width:64ch;font-size:1.06rem;line-height:1.68;}
+.hero-home p.sub{max-width:46ch;}
+
+/* --- 10. marca d'agua: um gesto, nao seis ------------------
+   O monograma aparecia em cinco secoes a 5% de opacidade,
+   invisivel de proposito. Fica so nas duas faixas principais,
+   e a 7%, onde da para perceber que e a marca. */
+.split::after,section.topics::after,.band-steps::after,.areas::after{display:none;}
+.band-ivory::after{opacity:0.07;}
+.band-dark::after{
+  content:"";position:absolute;left:-130px;bottom:40px;width:460px;height:460px;
+  background:url('../assets/logo-mark.png') center/contain no-repeat;
+  opacity:0.07;pointer-events:none;
+}
+
+/* --- 11. gesto proprio do botao primario ------------------
+   Todo botao fazia translateY(-2px) + sombra, igual a todos os
+   cards. O que converte tem que se mover diferente do resto. */
+.btn-gold{position:relative;overflow:hidden;isolation:isolate;}
+.btn-gold::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:var(--gold-bright);
+  transform:translateX(-101%);
+  transition:transform .34s var(--ease);
+}
+.btn-gold:hover::before,.btn-gold:focus-visible::before{transform:none;}
+.btn:hover{transform:none;box-shadow:none;}
+
+/* --- 12. hero da home: sem foto ---------------------------
+   A foto era a mao assinando com caneta tinteiro, um dos cliches
+   mais usados do nicho juridico. Tratada em preto e branco ela
+   disfarcava, mas continuava sendo foto de banco, e era a ultima
+   do site. O hero passa a ser tipografia sobre a cor da marca,
+   como as paginas de area ja sao. O brilho vinho no canto da a
+   profundidade que a imagem dava. */
+.hero-home{background:var(--ink);}
+.hero-home::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(70% 90% at 12% 18%, rgba(110,31,42,0.38) 0%, transparent 62%),
+    linear-gradient(104deg,#12100c 0%,#1a1611 55%,#231c16 100%);
+}
+.hero-home > .wrap{position:relative;z-index:1;}
+
+/* --- 13. movimento: menos, e nao acima da dobra -----------
+   Eram 24 elementos com a mesma animacao (translateY 22px +
+   blur 7px + 650ms) em quatro escadas lineares identicas.
+   Tres problemas: (a) blur animado em texto e o filtro mais
+   caro que existe num celular mediano; (b) no celular toda
+   grade vira uma coluna, entao o delay de 330ms nao escalona
+   nada, so atrasa o conteudo para um publico que vem de
+   anuncio; (c) o hero animava no carregamento, e por cerca de
+   um segundo a primeira impressao do site era a foto sem uma
+   palavra escrita. */
+@keyframes reveal-in{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:none;}
+}
+html.js [data-reveal]{opacity:0;transform:translateY(14px);filter:none;}
+html.js [data-reveal].is-visible{animation:reveal-in .52s var(--ease) both;}
+.hero-home [data-reveal],.hero-split [data-reveal],.hero-solid [data-reveal],.hero-contact [data-reveal]{
+  opacity:1 !important;transform:none !important;animation:none !important;
+}
+@media (max-width:900px){
+  html.js [data-reveal]{--reveal-delay:0ms !important;}
+}
+
+/* --- 14. cabecalho que encolhe, sem JS --------------------
+   Degrada sozinho onde nao houver suporte: fica o estado atual. */
+@supports (animation-timeline:scroll()){
+  @media (prefers-reduced-motion:no-preference) and (min-width:901px){
+    @keyframes hdr{to{--hdr-h:58px;--logo-h:34px;}}
+    header.site{animation:hdr linear both;animation-timeline:scroll();animation-range:0 160px;}
+    .header-row{min-height:var(--hdr-h,72px);}
+    .header-row img{height:var(--logo-h,48px);}
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html.js [data-reveal],html.js [data-reveal].is-visible{
+    opacity:1;transform:none;animation:none;
+  }
+  .btn-gold::before{transition:none;}
+  .area-index a{transition:none;}
+}
+
+/* --- 15. rede de seguranca do rotulo sobre fundo escuro ----
+   o-escritorio, demais-areas e contato usavam .eyebrow sem o
+   modificador .on-dark sobre hero escuro: renderizava no dourado
+   fechado (#a3894f) e lia apagado ao lado das paginas irmas. */
+.hero-home .eyebrow,.hero-split .eyebrow,.hero-solid .eyebrow,.hero-contact .eyebrow{
+  color:var(--gold-bright);display:block;margin-bottom:18px;
+}
+
+/* --- 16. passos no desktop: algarismo em cima, nao ao lado ---
+   Medido a 1440px: com o numeral ocupando uma coluna dentro de
+   uma das quatro colunas de 190px, sobravam ~110px para o texto
+   e o paragrafo virava fita de duas palavras por linha. No
+   desktop o algarismo sobe e a fileira 01 02 03 04 e que faz o
+   ritmo; no celular ele continua sendo a coluna da esquerda. */
+@media (min-width:901px){
+  .band-steps .wrap{max-width:1080px;}
+  .step{grid-template-columns:1fr;gap:0;}
+  .step .num{grid-row:auto;display:block;margin-bottom:12px;font-size:2.2rem;}
+  .step h3,.step p{grid-column:1;}
+}
+
+/* --- 17. principios: a mesma regua dos pilares ---------------
+   Ao perder a caixa, os tres principios de o-escritorio.html
+   ficaram soltos no vazio, sem nada separando um do outro. */
+.principle-list{gap:0;border-top:1px solid rgba(18,16,12,0.14);}
+.principle{padding:32px 28px 32px 0;}
+.principle + .principle{border-left:1px solid rgba(18,16,12,0.14);padding-left:28px;}
+.principle h3{font-size:1.3rem;line-height:1.14;}
+@media (max-width:860px){
+  .principle{padding:26px 0;border-bottom:1px solid rgba(18,16,12,0.14);}
+  .principle + .principle{border-left:0;padding-left:0;}
+}
+
+/* --- 18. o quinto topico sozinho na ultima linha -------------
+   criminal, previdenciario e bancario-consumidor tem cinco
+   topicos numa grade de duas colunas: sobrava um card orfao com
+   metade da linha vazia ao lado. O ultimo, quando impar, ocupa
+   a linha inteira. */
+.topic-list > .topic:last-child:nth-child(odd){grid-column:1 / -1;}
+.topic-list > .topic:last-child:nth-child(odd) p{max-width:72ch;}
+
+/* --- 19. eixo optico do Fraunces ----------------------------
+   opsz alto da o contraste de traco que faz o titulo parecer
+   desenhado. WONK 0 e SOFT 0 tiram a excentricidade da fonte:
+   para banca de advocacia o desenho tem que ser firme, nao
+   simpatico. */
+.serif,.section-title,.pillar h3,.step h3,.topic h3,.area h2,.principle h3,
+.split-col h3,.cta-banner h2,.step .num,.area-index .nome,.area-index .idx,
+h1,h2,h3{
+  font-variation-settings:"opsz" 120,"SOFT" 0,"WONK" 0;
+}
+.pillar p,.step p,.topic p,.area p,.principle p,.split-col p,
+.foot-fine,.eyebrow,nav.main a,.btn{
+  font-variation-settings:normal;
+}
+/* corpo em 17px: a escala inteira estava ancorada no 16px do
+   navegador, e texto juridico a 16px no celular cansa. */
+body{font-size:1.0625rem;}
+.pillar p,.step p,.topic p,.principle p{font-size:1rem;}
+
+/* --- 20. citacao de jurisprudencia nas respostas -------------
+   A fonte entra discreta, dentro da frase: ela sustenta a
+   resposta, nao e o assunto dela. Quem le passa batido; quem
+   quiser conferir, tem o numero. */
+.jur{
+  display:inline;
+  white-space:nowrap;
+  /* --gold-deep media 3,25 sobre o creme do card, abaixo dos 4,5
+     exigidos para texto deste tamanho. Mesmo tom que ja reprovou no
+     rotulo do FAQ. #7a6329 e o dourado escurecido que passa. */
+  color:#7a6329;
+  font-size:0.92em;
+  font-weight:500;
+}
+.jur::before{content:"(";}
+.jur::after{content:")";}
+.faq-a-inner p{text-wrap:pretty;}
+@media (max-width:560px){
+  .jur{white-space:normal;}
+}
+
+/* --- 21. identificacao profissional -------------------------
+   Fora da hero e fora do corpo do texto, por decisao do cliente:
+   o escritorio prefere atendimento sem rosto ate a pessoa
+   procurar. Discreta no rodape, mas legivel: texto que existe e
+   nao pode ser lido nao serve nem ao leitor nem a quem um dia
+   precisar conferir. */
+.foot-oab{
+  margin:14px 0 0;
+  font-size:0.78rem;
+  color:#a89a7e;
+}
+
+/* --- 22. alvos de toque que ficaram para tras ----------------
+   Medido a 375px: o link de areas da home tinha 21px de altura
+   clicavel, e os links do corpo da politica de privacidade, 21px.
+   O piso utilizavel e 44px. */
+.area-secondary a{
+  display:inline-flex;align-items:center;
+  min-height:44px;
+}
